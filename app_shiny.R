@@ -8,11 +8,8 @@ case <- sample(length(grille), 20)
 grille_facile <- grille
 grille_facile[case] <- ""
 
-# Convertir la matrice en data frame
-grille_facile_df <- as.data.frame(grille_facile)
-
 # Sauvegarder le data frame sans les noms de lignes et de colonnes
-write.csv(grille_facile_df, file = "grille_facile.csv", row.names = FALSE, col.names = FALSE)
+write.table(grille_facile, file = "grille_facile.csv", row.names =FALSE, col.names = FALSE, sep=",")
 
 
 ui <- fluidPage(
@@ -32,7 +29,7 @@ server <- function(input, output, session) {
   observeEvent(input$Facile, {
     grille <<- read.csv("grille_facile.csv", header = FALSE, stringsAsFactors = FALSE)
     grille <<- as.matrix(grille)
-    output$grille_facile <- renderTable({ grille })  # Met à jour l'affichage
+    output$grille_facile <- renderTable({ grille })  
   })
 }
 
