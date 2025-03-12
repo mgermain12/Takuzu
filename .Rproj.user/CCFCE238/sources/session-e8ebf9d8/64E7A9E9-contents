@@ -1,0 +1,31 @@
+library(datasets)
+library(ggplot2)
+library(shiny)
+
+ggplot(mtcars, aes(x=mpg)) + geom_histogram(bins=4, colour="red", fill="blue") + theme_classic()
+ggplot()
+
+# Exercice 1
+ui <- fluidPage(
+  titlePanel("Graphique de dispersion"),
+    sidebarPanel(
+      selectInput("xvar", "X Variable", choices=names(mtcars)),
+      selectInput("yvar", "Y Variable", choices=names(mtcars)),
+      sliderInput("pointSize", "Taille des points :", min = 1, max=10, value=3)),
+  mainPanel(plotOutput("scatterPlot"), width=20)
+)
+
+server <-function(input, output) {
+  output$scatterPlot <- renderPlot({
+    ggplot(mtcars, aes_string(x=input$xvar, y=input$yvar)) + 
+      geom_point(size=input$pointSize, color="pink") + 
+      theme_minimal() + 
+      labs(title="Graphique de dispersion", x=input$xvar, y=input$yvar)
+  })
+}
+
+shinyApp(ui, server)
+
+# Exercice 2
+
+
