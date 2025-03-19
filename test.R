@@ -24,14 +24,14 @@ grille_jour[case_jour] <- ""
 
 ui <- fluidPage(
   tags$link(rel = "stylesheet", href = "https://fonts.googleapis.com/css2?family=Gloria+Hallelujah&display=swap"),
-  tags$link(rel = "stylesheet", href = "https://fonts.googleapis.com/css2?family=Chalkduster&display=swap"),
+  tags$link(rel = "stylesheet", href = "https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap"),
   
   tags$style(HTML("
     .title-text {
       font-size: 100px;
       font-family: 'Gloria Hallelujah', cursive; 
       
-      /* VT323 (monospace) ou papyrus(fantasy) ou Chalkduster(fan..)  */
+      /* VT323 (monospace) ou papyrus(fantasy) ou Patrick Hand(fan..)  */
       
       font-weight: bold;
       color: skyblue; 
@@ -97,9 +97,9 @@ ui <- fluidPage(
     
     .titre {
       font-size: 50px; 
-      font-family: 'Chalkduster', fantasy;
+      font-family: 'Patrick Hand', fantasy;
       font-weight: bold;
-      color: darkblue;
+      color: skyblue;
       text-align: center;
       margin-bottom: 30px; 
     }
