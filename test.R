@@ -1,7 +1,7 @@
 library(shiny)
 library(bslib)
 
-grilles <- c("grille1_takuzu.csv", "grille2_takuzu.csv", "grille3_takuzu.csv", "grille4_takuzu.csv")
+grilles <- c("grille1.csv", "grille2.csv", "grille3.csv", "grille4.csv")
 grille_choisie <- sample(grilles, 1)
 
 grille <- read.csv(grille_choisie, header = FALSE)

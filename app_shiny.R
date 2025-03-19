@@ -1,7 +1,7 @@
 library(shiny)
 library(bslib)
 
-grille <- read.csv("grille1_takuzu.csv", header = FALSE)
+grille <- read.csv("grille1.csv", header = FALSE)
 grille <- as.matrix(grille)
 
 case_facile <- sample(length(grille), 30)
