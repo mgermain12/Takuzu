@@ -1,66 +1,279 @@
-grille1 <- matrix(c(0,0,1,1,0,1,0,1,
-                   0,1,0,1,1,0,1,0,
-                   1,1,0,0,1,0,0,1,
-                   1,0,1,1,0,1,0,0,
-                   0,1,0,0,1,0,1,1,
-                   1,1,0,1,0,1,0,0,
-                   0,0,1,0,1,0,1,1,
-                   1,0,1,0,0,1,1,0),nrow = 8, ncol=8)
+#' Génère une grille Takuzu 8x8 qui respecte les règles du Takuzu
+#' @param n Niveau de difficulté entre 'facile', 'moyen', 'difficile', 'jour'.
+#' Le nombre de cases à supprimer dépend du niveau choisi.
+#' @return Une matrice 8x8 contenant la grille Takuzu avec certaines cases vides.
+#' @export
 
-grille2 <- matrix(c(1,0,0,1,1,0,1,0,
-                    0,1,1,0,1,0,0,1,
-                    0,1,1,0,0,1,0,1,
-                    1,0,0,1,1,0,0,1,
-                    1,0,0,1,1,0,0,1,
-                    0,1,1,0,1,0,1,0,
-                    1,0,1,0,0,1,1,0,
-                    0,1,0,1,0,1,0,1),nrow = 8, ncol=8)
+library(shiny)
+library(bslib)
 
-grille3 <- matrix(c(1,0,1,0,1,0,1,0,
-                    0,1,0,1,0,1,0,1,
-                    0,0,1,1,0,0,1,1,
-                    1,1,0,0,1,1,0,0,
-                    0,1,1,0,1,0,0,1,
-                    0,0,1,1,0,1,1,0,
-                    1,1,0,0,1,0,0,1,
-                    1,0,0,1,0,1,1,0),nrow = 8, ncol=8)
+ui <- fluidPage(
+  tags$link(rel = "stylesheet", href = "https://fonts.googleapis.com/css2?family=Gloria+Hallelujah&display=swap"),
+  tags$link(rel = "stylesheet", href = "https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap"),
 
-grille4 <- matrix(c(1,0,0,1,0,1,1,0,
-                    1,1,0,0,1,0,0,1,
-                    0,0,1,1,0,1,1,0,
-                    0,1,1,0,1,0,0,1,
-                    1,1,0,0,1,1,0,0,
-                    0,0,1,1,0,0,1,1,
-                    0,1,0,1,0,1,0,1,
-                    1,0,1,0,1,0,1,0),nrow = 8, ncol=8)
+  tags$style(HTML("
+    .title-text {
+      font-size: 100px;
+      font-family: 'Gloria Hallelujah', cursive;
 
-write.table(grille1, file = "grille1.csv", row.names = FALSE, col.names = FALSE, sep = ",")
-write.table(grille2, file = "grille2.csv", row.names = FALSE, col.names = FALSE, sep = ",")
-write.table(grille3, file = "grille3.csv", row.names = FALSE, col.names = FALSE, sep = ",")
-write.table(grille4, file = "grille4.csv", row.names = FALSE, col.names = FALSE, sep = ",")
+      /* VT323 (monospace) ou papyrus(fantasy) ou Patrick Hand(fan..)  */
+
+      font-weight: bold;
+      color: skyblue;
+      text-shadow: 3px 3px 5px gray; /* Ajouter une ombre */
+
+    }
+
+    .new-button {
+    background-color: skyblue;
+    color: white;
+  font-size: 30px;
+  padding: 10px 30px;
+  border-radius: 10px;
+    margin: 5px;
+    position: relative;
+  top: -500px;
+  left: 70px;
+    }
+
+    .center-button {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .big-button {
+        background-color: skyblue;
+        color: white;
+        font-size: 40px;
+        border-radius: 10px;  /* Coins arrondis */
+        padding: 20px 30px;
+        margin: 5px;
+    }
+
+    .back-button {
+    background-color: #d3d3d3;
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    font-size: 20px;
+    padding: 10px 30px;
+    }
+
+    .button-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    }
+
+    .button-row {
+    display: flex;
+    gap: 50px; /* Ajoute de l'espace entre les boutons */
+    justify-content: center;
+    margin-top: 20px;
+    }
+
+    .centre {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+    }
+
+    .centre1 {
+      display: flex;
+      flex-direction: column; /* Permet d'empiler les éléments */
+      align-items: center; /* Centre horizontalement */
+      justify-content: center; /* Centre verticalement */
+      text-align: center;
+      width: 100%;
+    }
+
+    .titre {
+      font-size: 50px;
+      font-family: 'Patrick Hand', fantasy;
+      font-weight: bold;
+      color: skyblue;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .abandon {
+  background-color: red;
+  color: white;
+  font-size: 30px;
+  padding: 5px 20px;
+  border-radius: 10px;
+  position: relative;
+  top:50px;
+  left: 800px;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin: auto;
+    }
+    th, td {
+      border: 1px solid black;
+      padding: 0;
+      width: 70px;
+      height: 70px;
+      text-align: center;
+      font-size: 30px;
+      vertical-align: middle;
+    }
+    tr {
+      border-bottom: 1px solid black;
+      border-top: 1px solid black;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+  ")),
+  uiOutput("accueil_page"),
+  uiOutput("niveau_page"),
+  uiOutput("jeu_page")
+)
 
 
+server <- function(input, output, session) {
+  niveau_select <- reactiveVal(NULL)
+  grille_val <- reactiveVal(NULL)
 
+  output$accueil_page <- renderUI({
+    tagList(
+      div(style = "text-align: center; margin-top: 150px;",
+          h1("Le Fou Takuzu !", class ="title-text"),
+          tags$div(
+            class = "center-button",actionButton("start_game", "Commencer le jeu", class = "big-button"))
+      )
+    )
+  })
 
+  observeEvent(input$start_game, {
+    output$accueil_page <- renderUI({ NULL })
 
+    output$niveau_page <- renderUI({
+      div(class="centre1",h2("Choisissez un niveau de difficulté :",class="titre"),
+          div(
+            class = "button-row",
+            actionButton("niveau_facile", "Facile", class = "big-button"),
+            actionButton("niveau_moyen", "Moyen", class = "big-button"),
+            actionButton("niveau_difficile", "Difficile", class = "big-button")),
+          h2("...ou testez la grille du jour :", class="titre"),
+          actionButton("grille_jour", "Grille du Jour", class = "big-button"),
+          actionButton("back_to_home", "Retour à l'accueil", class = "back-button")
+      )})})
 
+  observeEvent(input$niveau_facile, {
+    output$niveau_page <- renderUI({ NULL })
 
+    output$niveau_page <- renderUI({
+      tagList(
+        h2("Facile",class="centre"),
+        div(class="centre",tableOutput("grille_affiche")),
+        actionButton("nouvelle_partie", "Nouvelle partie", class = "new-button"),
+        actionButton("back_to_home", "Retour à l'accueil", class = "back-button"),
+        actionButton("abandon", "Abandonner", class = "abandon")
+      )
+    })
+    niveau_select("facile")
+  })
 
+  observeEvent(input$niveau_moyen, {
+    output$niveau_page <- renderUI({ NULL })
 
+    output$niveau_page <- renderUI({
+      tagList(
+        h2("Moyen",class="centre"),
+        div(class="centre",tableOutput("grille_affiche")),
+        actionButton("nouvelle_partie", "Nouvelle partie", class = "new-button"),
+        actionButton("back_to_home", "Retour à l'accueil", class = "back-button"),
+        actionButton("abandon", "Abandonner", class = "abandon")
+      )
+    })
+    niveau_select("moyen")
+  })
 
+  observeEvent(input$niveau_difficile, {
+    output$niveau_page <- renderUI({ NULL })
 
+    output$niveau_page <- renderUI({
+      tagList(
+        h2("Difficile",class="centre"),
+        div(class="centre",tableOutput("grille_affiche")),
+        actionButton("nouvelle_partie", "Nouvelle partie", class = "new-button"),
+        actionButton("back_to_home", "Retour à l'accueil", class = "back-button"),
+        actionButton("abandon", "Abandonner", class = "abandon")
+      )
+    })
+    niveau_select("difficile")
+  })
 
+  observeEvent(input$grille_jour, {
+    output$niveau_page <- renderUI({ NULL })
 
+    output$niveau_page <- renderUI({
+      tagList(
+        h2("Grille du Jour",class="centre"),
+        div(class="centre",tableOutput("grille_affiche")),
+        actionButton("nouvelle_partie", "Nouvelle partie", class = "new-button"),
+        actionButton("back_to_home", "Retour à l'accueil", class = "back-button"),
+        actionButton("abandon", "Abandonner", class = "abandon")
+      )
+    })
+    niveau_select("jour")
+  })
 
+  # Afficher la grille selon le niveau choisi
+  output$grille_affiche <- renderTable({
+    req(niveau_select())
+    if (is.null(grille_val())) {
+      grille_val(grille(niveau_select()))
+    }
+    format(grille_val(), nsmall = 0)
+  }, striped = TRUE, colnames = FALSE, align = "c", bordered = TRUE)
 
+  observeEvent(input$nouvelle_partie, {
+    req(niveau_select())
+    grille_val(grille(niveau_select()))
+  })
 
+    observeEvent(input$back_to_home, {
+    grille_val(NULL)
+    niveau_select(NULL)
+    output$niveau_page <- renderUI({ NULL })
+    output$jeu_page <- renderUI({ NULL })
 
+    output$accueil_page <- renderUI({
+      tagList(
+        div(style = "text-align: center; margin-top: 50px;",
+            h1("Le Fou Takuzu !", class ="title-text"),
+            tags$div(
+              class = "center-button",actionButton("start_game", "Commencer le jeu", class = "big-button"))
+        )
+      )
+    })
+  })
+  observeEvent(input$abandon, {
+    grille_val(NULL)
+    niveau_select(NULL)
+    output$niveau_page <- renderUI({
+      div(class="centre1",h2("Choisissez un niveau de difficulté :",class="titre"),
+          div(
+            class = "button-row",
+            actionButton("niveau_facile", "Facile", class = "big-button"),
+            actionButton("niveau_moyen", "Moyen", class = "big-button"),
+            actionButton("niveau_difficile", "Difficile", class = "big-button")),
+          h2("...ou testez la grille du jour :", class="titre"),
+          actionButton("grille_jour", "Grille du Jour", class = "big-button"),
+          actionButton("back_to_home", "Retour à l'accueil", class = "back-button")
+      )})})
+}
 
-
-
-
-
-
-
-
+shinyApp(ui, server)
 

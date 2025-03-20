@@ -1,61 +1,67 @@
 source("R/niveau.R")
 
 #' Génère une grille Takuzu 8x8 qui respecte les règles du Takuzu
-#' @param niveau Niveau de difficulté entre 'facile', 'moyen', 'difficile', 'jour'.
+#' @param n Niveau de difficulté entre 'facile', 'moyen', 'difficile', 'jour'.
 #' Le nombre de cases à supprimer dépend du niveau choisi.
 #' @return Une matrice 8x8 contenant la grille Takuzu avec certaines cases vides.
 #' @export
 
+
 grille <- function(n) {
   taille <- 8
   cases_supp <- niveau(n)
-  m <- matrix(NA, nrow = taille, ncol = taille)
 
-  # Vérifie si un vecteur suit les règles du Takuzu
-  valide <- function(vec) {
-    vec <- na.omit(vec)  # Supprime les NA pour éviter les erreurs
-    if (length(vec) > 8) return(FALSE)  # Évite d'avoir plus de 8 éléments
-
-    # Vérifie l'équilibre entre 0 et 1
-    if (sum(vec == 0) > length(vec) / 2 || sum(vec == 1) > length(vec) / 2) {
+  # Fonction qui vérifie si une ligne ou colonne respecte les règles
+  valide_vecteur <- function(vec) {
+    vec <- na.omit(vec)
+    if (length(vec) > 8) {
       return(FALSE)
     }
-    # Vérifie qu'il n'y a pas plus de deux 0 ou 1 consécutifs
-    if (any(rle(vec)$lengths > 2)) {
+    if (sum(vec == 0) > 4 || sum(vec == 1) > 4) {
       return(FALSE)
     }
-    return(TRUE)
+    if (any(rle(vec[!is.na(vec)])$lengths > 2)) {
+      return(FALSE)
+    }
+    else {
+      return(TRUE)
+    }
   }
 
-  # Génération de la grille valide
-  for (i in 1:taille) {
-    for (j in 1:taille) {
-      valeurs_possibles <- c(0, 1)
-      repeat {
-        val <- sample(valeurs_possibles, 1)  # Choix aléatoire
-        m[i, j] <- val
+  remplir <- function(m, i = 1, j = 1) {
+    if (i > taille) {return(m)}
 
-        if (valide(m[i, ]) && valide(m[, j])) {
-          break  # On garde la valeur si la ligne et la colonne restent valides
-        }
-        m[i, j] <- NA  # Sinon, on réessaie
+    next_i <- if (j == taille) {i + 1} else {i}
+    next_j <- if (j == taille) {1} else {j + 1}
+
+    for (val in c(0, 1)) {
+      m[i, j] <- val
+
+      if (valide_vecteur(m[i, ]) && valide_vecteur(m[, j])) {
+        res <- remplir(m, next_i, next_j)
+        if (!is.null(res)) return(res)
       }
+      m[i, j] <- NA  # Backtrack
     }
+    return(NULL)  # Aucun choix possible ici
   }
 
-  # Vérifie l'unicité des lignes et colonnes
-  unique_lignes <- nrow(unique(m, MARGIN = 1)) == taille
-  unique_colonnes <- nrow(unique(t(m), MARGIN = 1)) == taille
+  # Initialisation de la matrice vide
+  m <- matrix(NA, nrow = taille, ncol = taille)
+  solution <- remplir(m)
 
-  if (!(unique_lignes && unique_colonnes)) {
-    return(grille(n))  # Relance la génération si la grille n'est pas correcte
+  # Si pas de solution, on relance proprement la fonction grille
+  if (is.null(solution)) {
+    return(grille(n))  # Appel récursif sur grille complète
   }
 
-  # Suppression de certaines cases selon le niveau
+  # Suppression des cases selon le niveau
   indices <- sample(1:(taille^2), cases_supp)
-  m[indices] <- NA
+  solution[indices] <- NA
 
-  return(m)
+  return(solution)
 }
 
-print(grille("facile"))
+# Exemple
+print(grille("jour"))
+
