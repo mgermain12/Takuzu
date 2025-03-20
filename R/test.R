@@ -145,6 +145,55 @@ ui <- fluidPage(
 
 
 server <- function(input, output, session) {
+  
+  rv <- reactiveValues(grille = grille_facile)
+  
+  # Fonction pour créer les boutons interactifs
+  generateGridUI <- function() {
+    output$grille_affiche <- renderUI({
+      div(class = "grid-container",
+          lapply(1:8, function(i) {
+            lapply(1:8, function(j) {
+              actionButton(
+                inputId = paste0("case_", i, "_", j),
+                label = ifelse(rv$grille[i, j] == "", " ", as.character(rv$grille[i, j])),
+                class = "grid-button"
+              )
+            })
+          })
+      )
+    })
+  }
+  
+  # Affichage initial
+  generateGridUI()
+  
+  # Gestion des clics pour modifier la grille
+  for (i in 1:8) {
+    for (j in 1:8) {
+      local({
+        row <- i
+        col <- j
+        observeEvent(input[[paste0("case_", row, "_", col)]], {
+          if (rv$grille[row, col] == "") {
+            rv$grille[row, col] <- 0  # Premier clic → 0
+          } else if (rv$grille[row, col] == 0) {
+            rv$grille[row, col] <- 1  # Deuxième clic → 1
+          } else if (rv$grille[row, col] == 1) {
+            rv$grille[row, col] <- ""  # Troisième clic → Vide à nouveau
+          }
+          generateGridUI()  # Met à jour l'affichage
+        }, ignoreInit = TRUE)
+      })
+    }
+  }
+  
+  # Gestion du choix de niveau
+  observeEvent(input$niveau_facile, { rv$grille <- grille_facile; generateGridUI() })
+  observeEvent(input$niveau_moyen, { rv$grille <- grille_moyen; generateGridUI() })
+  observeEvent(input$niveau_difficile, { rv$grille <- grille_difficile; generateGridUI() })
+  observeEvent(input$grille_jour, { rv$grille <- grille_jour; generateGridUI() })
+  
   output$accueil_page <- renderUI({
     tagList(
       div(style = "text-align: center; margin-top: 150px;",
