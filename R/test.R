@@ -1,7 +1,7 @@
 library(shiny)
 library(bslib)
 
-grilles <- c("grille1.csv", "grille2.csv", "grille3.csv", "grille4.csv")
+grilles <- c("../grille1.csv", "../grille2.csv", "../grille3.csv", "../grille4.csv")
 grille_choisie <- sample(grilles, 1)
 
 grille <- read.csv(grille_choisie, header = FALSE)
@@ -25,36 +25,36 @@ grille_jour[case_jour] <- ""
 ui <- fluidPage(
   tags$link(rel = "stylesheet", href = "https://fonts.googleapis.com/css2?family=Gloria+Hallelujah&display=swap"),
   tags$link(rel = "stylesheet", href = "https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap"),
-  
+
   tags$style(HTML("
     .title-text {
       font-size: 100px;
-      font-family: 'Gloria Hallelujah', cursive; 
-      
+      font-family: 'Gloria Hallelujah', cursive;
+
       /* VT323 (monospace) ou papyrus(fantasy) ou Patrick Hand(fan..)  */
-      
+
       font-weight: bold;
-      color: skyblue; 
+      color: skyblue;
       text-shadow: 3px 3px 5px gray; /* Ajouter une ombre */
-      
+
     }
-    
+
     .center-button {
         position: absolute;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
     }
-    
+
     .big-button {
-        background-color: skyblue;  
-        color: white;  
-        font-size: 40px;  
+        background-color: skyblue;
+        color: white;
+        font-size: 40px;
         border-radius: 10px;  /* Coins arrondis */
         padding: 20px 30px;
         margin: 5px;
     }
-    
+
     .back-button {
     background-color: #d3d3d3;
     position: absolute;
@@ -63,29 +63,29 @@ ui <- fluidPage(
     font-size: 20px;
     padding: 10px 30px;
     }
-    
+
     .button-container {
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    height: 100vh; 
+    height: 100vh;
     }
-    
+
     .button-row {
     display: flex;
     gap: 50px; /* Ajoute de l'espace entre les boutons */
     justify-content: center;
     margin-top: 20px;
     }
-    
+
     .centre {
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 40px;
     }
-    
+
     .centre1 {
       display: flex;
       flex-direction: column; /* Permet d'empiler les éléments */
@@ -94,28 +94,28 @@ ui <- fluidPage(
       text-align: center;
       width: 100%;
     }
-    
+
     .titre {
-      font-size: 50px; 
+      font-size: 50px;
       font-family: 'Patrick Hand', fantasy;
       font-weight: bold;
       color: skyblue;
       text-align: center;
-      margin-bottom: 30px; 
+      margin-bottom: 30px;
     }
-    
+
     .abandon {
   background-color: red;
   color: white;
   font-size: 30px;
-  padding: 10px 30px; 
+  padding: 10px 30px;
   border-radius: 10px;
   display: block; /* S'assure que le bouton prend toute la largeur possible */
   margin-top: 20px; /* Espace entre la grille et le bouton */
   margin-left: auto;
   margin-right: auto;
     }
-    
+
     table {
       border-collapse: collapse;
       width: 100%;
@@ -145,55 +145,7 @@ ui <- fluidPage(
 
 
 server <- function(input, output, session) {
-  
-  rv <- reactiveValues(grille = grille_facile)
-  
-  # Fonction pour créer les boutons interactifs
-  generateGridUI <- function() {
-    output$grille_affiche <- renderUI({
-      div(class = "grid-container",
-          lapply(1:8, function(i) {
-            lapply(1:8, function(j) {
-              actionButton(
-                inputId = paste0("case_", i, "_", j),
-                label = ifelse(rv$grille[i, j] == "", " ", as.character(rv$grille[i, j])),
-                class = "grid-button"
-              )
-            })
-          })
-      )
-    })
-  }
-  
-  # Affichage initial
-  generateGridUI()
-  
-  # Gestion des clics pour modifier la grille
-  for (i in 1:8) {
-    for (j in 1:8) {
-      local({
-        row <- i
-        col <- j
-        observeEvent(input[[paste0("case_", row, "_", col)]], {
-          if (rv$grille[row, col] == "") {
-            rv$grille[row, col] <- 0  # Premier clic → 0
-          } else if (rv$grille[row, col] == 0) {
-            rv$grille[row, col] <- 1  # Deuxième clic → 1
-          } else if (rv$grille[row, col] == 1) {
-            rv$grille[row, col] <- ""  # Troisième clic → Vide à nouveau
-          }
-          generateGridUI()  # Met à jour l'affichage
-        }, ignoreInit = TRUE)
-      })
-    }
-  }
-  
-  # Gestion du choix de niveau
-  observeEvent(input$niveau_facile, { rv$grille <- grille_facile; generateGridUI() })
-  observeEvent(input$niveau_moyen, { rv$grille <- grille_moyen; generateGridUI() })
-  observeEvent(input$niveau_difficile, { rv$grille <- grille_difficile; generateGridUI() })
-  observeEvent(input$grille_jour, { rv$grille <- grille_jour; generateGridUI() })
-  
+
   output$accueil_page <- renderUI({
     tagList(
       div(style = "text-align: center; margin-top: 150px;",
@@ -203,10 +155,10 @@ server <- function(input, output, session) {
       )
     )
   })
-  
+
   observeEvent(input$start_game, {
   output$accueil_page <- renderUI({ NULL })
-    
+
   output$niveau_page <- renderUI({
       div(class="centre1",h2("Choisissez un niveau de difficulté :",class="titre"),
               div(
@@ -218,10 +170,10 @@ server <- function(input, output, session) {
         actionButton("grille_jour", "Grille du Jour", class = "big-button"),
         actionButton("back_to_home", "Retour à l'accueil", class = "back-button")
 )})})
-  
+
   observeEvent(input$niveau_facile, {
     output$niveau_page <- renderUI({ NULL })
-    
+
     output$niveau_page <- renderUI({
       tagList(
         h2("Facile",class="centre"),
@@ -231,10 +183,10 @@ server <- function(input, output, session) {
       )
     })
   })
-  
+
   observeEvent(input$niveau_moyen, {
     output$niveau_page <- renderUI({ NULL })
-    
+
     output$niveau_page <- renderUI({
       tagList(
         h2("Moyen",class="centre"),
@@ -244,10 +196,10 @@ server <- function(input, output, session) {
       )
     })
   })
-  
+
   observeEvent(input$niveau_difficile, {
     output$niveau_page <- renderUI({ NULL })
-    
+
     output$niveau_page <- renderUI({
       tagList(
         h2("Difficile",class="centre"),
@@ -257,10 +209,10 @@ server <- function(input, output, session) {
       )
     })
   })
-  
+
   observeEvent(input$grille_jour, {
     output$niveau_page <- renderUI({ NULL })
-    
+
     output$niveau_page <- renderUI({
       tagList(
         h2("Grille du Jour",class="centre"),
@@ -270,7 +222,7 @@ server <- function(input, output, session) {
       )
     })
   })
-  
+
   # Afficher la grille selon le niveau choisi
   output$grille_affiche <- renderTable({
     if (input$niveau_facile == 1) {
@@ -283,11 +235,11 @@ server <- function(input, output, session) {
       grille_jour
     }
   }, striped = TRUE, colnames = FALSE, align = "c", bordered = TRUE)
-  
+
   observeEvent(input$back_to_home, {
     output$niveau_page <- renderUI({ NULL })
     output$jeu_page <- renderUI({ NULL })
-  
+
   output$accueil_page <- renderUI({
     tagList(
       div(style = "text-align: center; margin-top: 50px;",
