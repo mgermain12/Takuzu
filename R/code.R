@@ -4,6 +4,29 @@ library(bslib)
 ui <- fluidPage(
   tags$link(rel = "stylesheet", href = "https://fonts.googleapis.com/css2?family=Gloria+Hallelujah&display=swap"),
   tags$link(rel = "stylesheet", href = "https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap"),
+  tags$head(
+    tags$script(src = "https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js")
+  ),
+
+  tags$script(HTML("
+      Shiny.addCustomMessageHandler('confetti', function(message) {
+        confetti({
+        spread: 5000,
+          particleCount: 10000,  // Augmentation du nombre de confettis pour un effet plus intense
+      origin: {  x: 0.5, y: 1.45  },   // Position de départ (milieu de l'écran)
+      gravity: 0.5,         // Gravité plus forte pour faire tomber les confettis rapidement
+      startVelocity: 100,    // Vitesse plus élevée pour que l'explosion soit encore plus massive
+      ticks: 200,           // Durée de vie des confettis (plus longtemps avant de disparaître)
+      colors: ['#FF5733', '#FF33FF', '#33FFF3', '#FFD700', '#FF0000', '#00FF00', '#1E90FF'],
+      shapes: ['circle', 'square', 'triangle'],  // Formes variées pour plus de diversité visuelle
+      angle: 90,            // Direction verticale pour que les confettis tombent droit
+      angleVariation: 5000,
+      decay: 0.9,           // Réduction progressive de la vitesse pour simuler une chute naturelle
+      drift: 0,             // Pas de dérive horizontale
+      gravity: 0.4            // Ajuste la chute pour une gravité plus naturelle
+        });
+      });
+    ")),
 
   tags$style(HTML("
   .parchment-button {
@@ -228,12 +251,18 @@ server <- function(input, output, session) {
       tagList(
         h2(title, class = "centre"),
         div(class = "centre", uiOutput("grille_affiche")),
+        actionButton("vérifier", "Vérifier ✅", class = "big-button"),
         actionButton("nouvelle_partie", "Nouvelle partie", class = "new-button"),
         actionButton("back_to_home", "Retour à l'accueil", class = "back-button"),
         actionButton("abandon", "Abandonner", class = "abandon")
       )
     })
   }
+
+  observeEvent(input$vérifier, {
+    # Envoie un message personnalisé au client pour déclencher le JS
+    session$sendCustomMessage("confetti", list())
+  })
 
   # Afficher la grille selon le niveau choisi
   output$grille_affiche <- renderUI({
