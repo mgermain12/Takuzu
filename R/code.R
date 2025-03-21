@@ -92,6 +92,10 @@ ui <- fluidPage(
     }
 
     .new-button {
+      display: flex;
+  flex-direction: column; /* Dispose les éléments verticalement */
+  align-items: center; /* Centre les éléments horizontalement */
+  gap: 10px; /* Espace entre les boutons */
       background-color: skyblue;
       color: white;
       font-size: 30px;
@@ -267,7 +271,7 @@ server <- function(input, output, session) {
         h2("Grille du jour", class = "centre"),
         div(class = "centre", uiOutput("grille_affiche")),
         actionButton("back_to_home", "Retour à l'accueil", class = "back-button"),
-        actionButton("verifier", "Vérifier", class = "big-button"),
+        actionButton("verifier", "Vérifier", class = "new-button"),
         actionButton("abandon", "Abandonner", class = "abandon")
       )
     })
@@ -278,7 +282,7 @@ server <- function(input, output, session) {
       tagList(
         h2(title, class = "centre"),
         div(class = "centre", uiOutput("grille_affiche")),
-        actionButton("verifier", "Vérifier", class = "big-button"),
+        actionButton("verifier", "Vérifier", class = "new-button"),
         actionButton("nouvelle_partie", "Nouvelle partie", class = "new-button"),
         actionButton("back_to_home", "Retour à l'accueil", class = "back-button"),
         actionButton("abandon", "Abandonner", class = "abandon")
@@ -287,15 +291,12 @@ server <- function(input, output, session) {
   }
 
   observeEvent(input$verifier, {
-    session$sendCustomMessage("shake", list())
-
-    # Envoie un message personnalisé au client pour déclencher le JS
-    #if (verifier(grille)==TRUE) {
-    #session$sendCustomMessage("confetti", list())
-    #}
-    #if (verifier(grille)==FALSE) {
-      #session$sendCustomMessage("rain", NULL)
-    #}
+    # Vérifiez si la grille est bien définie avant de l'utiliser
+    if (!is.null(grille_val()) && !is.null(user_grille$grid) && verifier(user_grille$grid)) {
+      session$sendCustomMessage("confetti", list())
+    } else {
+      session$sendCustomMessage("shake", list())
+    }
   })
 
   # Afficher la grille selon le niveau choisi

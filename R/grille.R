@@ -1,5 +1,3 @@
-source("R/niveau.R")
-
 #' Génère une grille Takuzu 8x8 qui respecte les règles du Takuzu
 #' @param n Niveau de difficulté entre 'facile', 'moyen', 'difficile', 'jour'.
 #' Le nombre de cases à supprimer dépend du niveau choisi.
