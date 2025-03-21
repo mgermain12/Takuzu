@@ -10,7 +10,7 @@
 #'
 niveau <- function(x) {
 
-  niveaux <- list("facile" = 30, "moyen" = 35, "difficile" = 40, "jour" = 45)
+  niveaux <- list("facile" = 20, "moyen" = 35, "difficile" = 40, "jour" = 45)
   nb_cases <- niveaux[[x]]
 
   return(nb_cases)
