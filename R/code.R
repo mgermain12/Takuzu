@@ -1,12 +1,39 @@
 library(shiny)
 library(bslib)
+library(shinyjs)
 
 ui <- fluidPage(
+  useShinyjs(),
   tags$link(rel = "stylesheet", href = "https://fonts.googleapis.com/css2?family=Gloria+Hallelujah&display=swap"),
   tags$link(rel = "stylesheet", href = "https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap"),
-  tags$head(
+    tags$head(
     tags$script(src = "https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js")
   ),
+
+  tags$script(HTML("
+function playSound(soundFile) {
+    var audio = new Audio(soundFile);
+
+    audio.onloadedmetadata = function() {
+        audio.currentTime = 1; // Démarre à 2 secondes
+        audio.play().catch(error => console.log('Erreur de lecture audio :', error));
+
+        // Arrêter la lecture après 3 secondes
+        setTimeout(function() {
+            audio.pause();
+        }, 3000); // 3000 ms = 3 secondes
+    };
+}
+
+Shiny.addCustomMessageHandler('win', function(message) {
+    playSound('victoire.mp3');
+});
+
+Shiny.addCustomMessageHandler('lose', function(message) {
+    playSound('defaite.mp3');
+});
+
+")),
 
   tags$script(HTML("
       Shiny.addCustomMessageHandler('confetti', function(message) {
@@ -70,13 +97,16 @@ ui <- fluidPage(
       width: 100%;
       height: 100%;
       font-size: 25px;
-      background-color: #ADD8E6;
+      background-color: #90b4d2;
       cursor: not-allowed;
       border-radius: 0;
     }
 
     .title-text {
-      font-size: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 150px;
       font-family: 'Gloria Hallelujah', cursive;
       font-weight: bold;
       color: skyblue;
@@ -96,12 +126,14 @@ ui <- fluidPage(
   flex-direction: column; /* Dispose les éléments verticalement */
   align-items: center; /* Centre les éléments horizontalement */
   gap: 10px; /* Espace entre les boutons */
-      background-color: skyblue;
+      background: linear-gradient(135deg, #add8e6, #4682b4);
       color: white;
       font-size: 30px;
+      font-family: 'Patrick Hand', fantasy;
+      box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1); /* Ombre légère */
       padding: 10px 30px;
       border-radius: 10px;
-      margin: 5px;
+      margin: 80px;
       position: relative;
       top: -500px;
       left: 70px;
@@ -114,17 +146,9 @@ ui <- fluidPage(
       transform: translate(-50%, -50%);
     }
 
-    .big-button {
-      background-color: skyblue;
-      color: white;
-      font-size: 40px;
-      border-radius: 10px;
-      padding: 20px 30px;
-      margin: 5px;
-    }
-
     .back-button {
       background-color: #d3d3d3;
+      font-family: 'Patrick Hand', fantasy;
       position: absolute;
       bottom: 20px;
       left: 20px;
@@ -132,50 +156,52 @@ ui <- fluidPage(
       padding: 10px 30px;
     }
 
-    .button-container {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-    }
-
     .button-row {
       display: flex;
       gap: 50px;
       justify-content: center;
-      margin-top: 20px;
+      margin-top: 0px;
     }
 
-    .centre {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 40px;
-    }
+.centre {
+  display: flex;
+  font-family: 'Patrick Hand', fantasy;
+  text-align: center;
+  justify-content: center;  /* Centre horizontalement */
+  align-items: center;      /* Centre verticalement */
+  font-size: 60px;
+  flex-direction: column;
+  gap: 50px;
+}
+
 
     .centre1 {
+      font-size: 60px;
+      font-family: 'Patrick Hand', fantasy;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       text-align: center;
-      width: 100%;
+      width =100%;
     }
 
     .titre {
-      font-size: 50px;
+    display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 70px ;
       font-family: 'Patrick Hand', fantasy;
       font-weight: bold;
       color: skyblue;
       text-align: center;
-      margin-bottom: 30px;
     }
 
     .abandon {
       background-color: red;
       color: white;
       font-size: 30px;
+      font-family: 'Patrick Hand', fantasy;
       padding: 5px 20px;
       border-radius: 10px;
       position: absolute; /* Positionnement indépendant */
@@ -231,7 +257,7 @@ server <- function(input, output, session) {
     output$accueil_page <- renderUI({ NULL })
 
     output$niveau_page <- renderUI({
-      div(class="centre1",h2("Choisissez un niveau de difficulté :",class="titre"),
+      div(class="centre",h2("Choisissez un niveau de difficulté :",class="titre"),
           div(
             class = "button-row",
             actionButton("niveau_facile", "Facile", class = "parchment-button"),
@@ -269,8 +295,8 @@ server <- function(input, output, session) {
     init_game("jour")
     output$niveau_page <- renderUI({
       tagList(
-        h2("Grille du jour", class = "centre"),
-        div(class = "centre", uiOutput("grille_affiche")),
+        h2("Grille du jour", class = "centre1"),
+        div(class = "centre1", uiOutput("grille_affiche")),
         actionButton("back_to_home", "Retour à l'accueil", class = "back-button"),
         actionButton("recommencer", "Recommencer", class = "new-button"),
         actionButton("verifier", "Vérifier", class = "new-button"),
@@ -282,8 +308,8 @@ server <- function(input, output, session) {
   show_game_page <- function(title) {
     output$niveau_page <- renderUI({
       tagList(
-        h2(title, class = "centre"),
-        div(class = "centre", uiOutput("grille_affiche")),
+        h2(title, class = "centre1"),
+        div(class = "centre1", uiOutput("grille_affiche")),
         actionButton("verifier", "Vérifier", class = "new-button"),
         actionButton("recommencer", "Recommencer", class = "new-button"),
         actionButton("nouvelle_partie", "Nouvelle partie", class = "new-button"),
@@ -296,8 +322,10 @@ server <- function(input, output, session) {
   observeEvent(input$verifier, {
     # Vérifiez si la grille est bien définie avant de l'utiliser
     if (!is.null(grille_val()) && !is.null(user_grille$grid) && verifier(user_grille$grid)) {
+      session$sendCustomMessage("win", list())
       session$sendCustomMessage("confetti", list())
     } else {
+      session$sendCustomMessage("lose", list())
       session$sendCustomMessage("shake", list())
     }
   })
@@ -306,7 +334,7 @@ server <- function(input, output, session) {
   output$grille_affiche <- renderUI({
     req(user_grille$grid)
     grid <- user_grille$grid
-    tagList(
+    tagList(div(class="centre",
       tags$table(
         lapply(1:nrow(grid), function(i) {
           tags$tr(
@@ -323,7 +351,7 @@ server <- function(input, output, session) {
           )
         })
       )
-    )
+    ))
   })
 
   # Dynamique : observer tous les boutons cliquables (cases vides)
@@ -387,7 +415,7 @@ server <- function(input, output, session) {
     grille_val(NULL)
     niveau_select(NULL)
     output$niveau_page <- renderUI({
-      div(class="centre1",h2("Choisissez un niveau de difficulté :",class="titre"),
+      div(class="centre",h2("Choisissez un niveau de difficulté :",class="titre"),
           div(
             class = "button-row",
             actionButton("niveau_facile", "Facile", class = "parchment-button"),
@@ -397,6 +425,22 @@ server <- function(input, output, session) {
           actionButton("grille_jour", "Grille du Jour", class = "parchment-button"),
           actionButton("back_to_home", "Retour à l'accueil", class = "back-button")
       )})})
+
+  observeEvent(input$recommencer, {
+    req(user_grille$grid, grille_val())  # Vérifier que les données existent
+
+    # Réinitialiser seulement les cases modifiables
+    new_grid <- user_grille$grid  # Copie de la grille actuelle
+    for (i in 1:nrow(new_grid)) {
+      for (j in 1:ncol(new_grid)) {
+        if (is.na(grille_val()[i, j])) {  # Si la case est modifiable
+          new_grid[i, j] <- NA  # On la remet vide
+        }
+      }
+    }
+
+    user_grille$grid <- new_grid  # Mise à jour de la grille affichée
+  })
 
 }
 
