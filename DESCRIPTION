@@ -2,10 +2,12 @@ Package: Takuzu
 Title: What the Package Does (One Line, Title Case)
 Version: 0.0.0.9000
 Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+        c(
+      person("Coralie", "ROMANI DE VINCI", email = "coralie.romani-de-vinci@etu.umontpellier.fr", role = c("aut", "cre")),
+      person("Marine", "GERMAIN", email = "marine.germain@etu.umontpellier.fr", role = c("aut", "cre"))
+    )
+Description: A package for generating and solving Takuzu puzzles.
+License: MIT
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2

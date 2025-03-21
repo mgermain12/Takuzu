@@ -11,6 +11,8 @@ grille <- function(n) {
   taille <- 8
   cases_supp <- niveau(n)
 
+  set.seed(as.numeric(Sys.time()) + sample(1:10000, 1))
+
   # Fonction qui vérifie si une ligne ou colonne respecte les règles
   valide_vecteur <- function(vec) {
     vec <- na.omit(vec)
@@ -28,13 +30,28 @@ grille <- function(n) {
     }
   }
 
+
+  # Vérifie qu'aucune ligne ou colonne n'est identique à une autre
+  unique_lignes_colonnes <- function(m) {
+    lignes <- apply(m, 1, paste, collapse = "")
+    colonnes <- apply(m, 2, paste, collapse = "")
+    return(length(unique(lignes)) == nrow(m) && length(unique(colonnes)) == ncol(m))
+  }
+
   remplir <- function(m, i = 1, j = 1) {
-    if (i > taille) {return(m)}
+    if (i > taille) {
+      # Vérifier unicité des lignes et colonnes avant d'accepter la solution
+      if (unique_lignes_colonnes(m)) {
+        return(m)
+      } else {
+        return(NULL)
+      }
+    }
 
-    next_i <- if (j == taille) {i + 1} else {i}
-    next_j <- if (j == taille) {1} else {j + 1}
+    next_i <- if (j == taille) { i + 1 } else { i }
+    next_j <- if (j == taille) { 1 } else { j + 1 }
 
-    for (val in c(0, 1)) {
+    for (val in sample(c(0, 1))) {  # Mélange des valeurs pour varier les solutions
       m[i, j] <- val
 
       if (valide_vecteur(m[i, ]) && valide_vecteur(m[, j])) {
@@ -56,12 +73,12 @@ grille <- function(n) {
   }
 
   # Suppression des cases selon le niveau
-  indices <- sample(1:(taille^2), cases_supp)
-  solution[indices] <- NA
+  #indices <- sample(1:(taille^2), cases_supp)
+  #solution[indices] <- NA
 
   return(solution)
 }
 
 # Exemple
-print(grille("jour"))
+print(grille("difficile"))
 
