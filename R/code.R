@@ -178,9 +178,10 @@ ui <- fluidPage(
       font-size: 30px;
       padding: 5px 20px;
       border-radius: 10px;
-      position: relative;
-      top:50px;
-      left: 800px;
+      position: absolute; /* Positionnement indépendant */
+  top: 80%; /* Ajuste la hauteur, peut être 50%, 70%, etc. selon tes besoins */
+  left: 50%; /* Centre horizontalement */
+  transform: translate(-50%, -50%); /* Recentre parfaitement */
     }
 
     table {
@@ -271,6 +272,7 @@ server <- function(input, output, session) {
         h2("Grille du jour", class = "centre"),
         div(class = "centre", uiOutput("grille_affiche")),
         actionButton("back_to_home", "Retour à l'accueil", class = "back-button"),
+        actionButton("recommencer", "Recommencer", class = "new-button"),
         actionButton("verifier", "Vérifier", class = "new-button"),
         actionButton("abandon", "Abandonner", class = "abandon")
       )
@@ -283,6 +285,7 @@ server <- function(input, output, session) {
         h2(title, class = "centre"),
         div(class = "centre", uiOutput("grille_affiche")),
         actionButton("verifier", "Vérifier", class = "new-button"),
+        actionButton("recommencer", "Recommencer", class = "new-button"),
         actionButton("nouvelle_partie", "Nouvelle partie", class = "new-button"),
         actionButton("back_to_home", "Retour à l'accueil", class = "back-button"),
         actionButton("abandon", "Abandonner", class = "abandon")
