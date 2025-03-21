@@ -15,21 +15,25 @@ grille <- function(n) {
 
   # Fonction qui vérifie si une ligne ou colonne respecte les règles
   valide_vecteur <- function(vec) {
-    vec <- na.omit(vec)
-    if (length(vec) > 8) {
-      return(FALSE)
-    }
-    if (sum(vec == 0) > 4 || sum(vec == 1) > 4) {
-      return(FALSE)
-    }
-    if (any(rle(vec[!is.na(vec)])$lengths > 2)) {
-      return(FALSE)
-    }
-    else {
-      return(TRUE)
-    }
-  }
+    vec <- as.numeric(vec)
+    vec <- as.vector(na.omit(vec))  # Supprime les valeurs NA
 
+    # Si le vecteur est vide après suppression des NA, il est invalide
+    if (length(vec) == 0) {
+      return(FALSE)
+    }
+
+    # Vérifie qu'il y a au plus 4 zéros et 4 uns
+    if (sum(vec == 0, na.rm = TRUE) > 4 || sum(vec == 1, na.rm = TRUE) > 4) {
+      return(FALSE)
+    }
+    # Vérifie qu'il n'y a pas plus de 2 chiffres identiques consécutifs
+    if (any(rle(vec)$lengths > 2, na.rm = TRUE)) {
+      return(FALSE)
+    }
+
+    return(TRUE)
+  }
 
   # Vérifie qu'aucune ligne ou colonne n'est identique à une autre
   unique_lignes_colonnes <- function(m) {
@@ -73,12 +77,12 @@ grille <- function(n) {
   }
 
   # Suppression des cases selon le niveau
-  #indices <- sample(1:(taille^2), cases_supp)
-  #solution[indices] <- NA
+  indices <- sample(1:(taille^2), cases_supp)
+  solution[indices] <- NA
 
   return(solution)
 }
 
 # Exemple
-print(grille("difficile"))
+print(grille("facile"))
 

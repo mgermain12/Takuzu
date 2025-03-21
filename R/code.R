@@ -27,8 +27,34 @@ ui <- fluidPage(
         });
       });
     ")),
+  tags$script(HTML("
+  Shiny.addCustomMessageHandler('shake', function(message) {
+    $('body').addClass('shake');
+    setTimeout(function() {
+      $('body').removeClass('shake');
+    }, 1000);
+  });
+")),
 
   tags$style(HTML("
+   @keyframes shake {
+      0% { transform: translate(10px, 10px) rotate(0deg); }
+      10% { transform: translate(-10px, -10px) rotate(-5deg); }
+      20% { transform: translate(-20px, 0px) rotate(5deg); }
+      30% { transform: translate(20px, 10px) rotate(-5deg); }
+      40% { transform: translate(-15px, 10px) rotate(5deg); }
+      50% { transform: translate(15px, -10px) rotate(-5deg); }
+      60% { transform: translate(-20px, 10px) rotate(5deg); }
+      70% { transform: translate(20px, -10px) rotate(-5deg); }
+      80% { transform: translate(-10px, 15px) rotate(5deg); }
+      90% { transform: translate(10px, -15px) rotate(-5deg); }
+      100% { transform: translate(0, 0) rotate(0deg); }
+    }
+
+    .shake {
+      animation: shake 1s;
+      animation-iteration-count: 3;
+    }
   .parchment-button {
   background: linear-gradient(135deg, #add8e6, #4682b4);
   color: white;
@@ -241,6 +267,7 @@ server <- function(input, output, session) {
         h2("Grille du jour", class = "centre"),
         div(class = "centre", uiOutput("grille_affiche")),
         actionButton("back_to_home", "Retour à l'accueil", class = "back-button"),
+        actionButton("verifier", "Vérifier", class = "big-button"),
         actionButton("abandon", "Abandonner", class = "abandon")
       )
     })
@@ -251,7 +278,7 @@ server <- function(input, output, session) {
       tagList(
         h2(title, class = "centre"),
         div(class = "centre", uiOutput("grille_affiche")),
-        actionButton("vérifier", "Vérifier ✅", class = "big-button"),
+        actionButton("verifier", "Vérifier", class = "big-button"),
         actionButton("nouvelle_partie", "Nouvelle partie", class = "new-button"),
         actionButton("back_to_home", "Retour à l'accueil", class = "back-button"),
         actionButton("abandon", "Abandonner", class = "abandon")
@@ -259,9 +286,16 @@ server <- function(input, output, session) {
     })
   }
 
-  observeEvent(input$vérifier, {
+  observeEvent(input$verifier, {
+    session$sendCustomMessage("shake", list())
+
     # Envoie un message personnalisé au client pour déclencher le JS
-    session$sendCustomMessage("confetti", list())
+    #if (verifier(grille)==TRUE) {
+    #session$sendCustomMessage("confetti", list())
+    #}
+    #if (verifier(grille)==FALSE) {
+      #session$sendCustomMessage("rain", NULL)
+    #}
   })
 
   # Afficher la grille selon le niveau choisi
