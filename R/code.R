@@ -422,7 +422,7 @@ server <- function(input, output, session) {
             actionButton("niveau_moyen", "Moyen", class = "parchment-button"),
             actionButton("niveau_difficile", "Difficile", class = "parchment-button")),
           h2("...ou testez la grille du jour :", class="titre"),
-          actionButton("grille_jour", "Grille du Jour", class = "parchment-button"),
+          actionButton("grille_jour", "Grille du jour", class = "parchment-button"),
           actionButton("back_to_home", "Retour à l'accueil", class = "back-button")
       )})})
 
