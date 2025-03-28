@@ -1,12 +1,12 @@
 Package: Takuzu
-Title: What the Package Does (One Line, Title Case)
+Title: Grille de Takuzu
 Version: 0.0.0.9000
 Authors@R: 
         c(
       person("Coralie", "ROMANI DE VINCI", email = "coralie.romani-de-vinci@etu.umontpellier.fr", role = c("aut", "cre")),
       person("Marine", "GERMAIN", email = "marine.germain@etu.umontpellier.fr", role = c("aut", "cre"))
     )
-Description: A package for generating and solving Takuzu puzzles.
+Description: Ce package génère des grilles de Takuzu valides et permet de les résoudre.
 License: MIT
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
