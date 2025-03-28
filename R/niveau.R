@@ -3,14 +3,14 @@
 #'   - `"facile"` (30 cases supprimées)
 #'   - `"moyen"` (35 cases supprimées)
 #'   - `"difficile"` (40 cases supprimées)
-#'   - `"jour"` (45 cases supprimées)
+#'   - `"bonus"` (45 cases supprimées)
 #'
 #' @return Un entier correspondant au nombre de cases à préremplir.
 #' @export
 #'
 niveau <- function(x) {
 
-  niveaux <- list("facile" = 20, "moyen" = 35, "difficile" = 40, "jour" = 45)
+  niveaux <- list("facile" = 20, "moyen" = 35, "difficile" = 40, "bonus" = 45)
   nb_cases <- niveaux[[x]]
 
   return(nb_cases)

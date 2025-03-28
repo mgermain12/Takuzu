@@ -80,7 +80,3 @@ grille <- function(n) {
 
   return(solution)
 }
-
-# Exemple
-print(grille("facile"))
-
