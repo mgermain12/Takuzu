@@ -9,7 +9,7 @@ ui <- fluidPage(
   tags$head(
     tags$script(src = "https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js")
   ),
-  
+
   tags$script(HTML("
 function playSound(soundFile) {
     var audio = new Audio(soundFile);
@@ -35,7 +35,7 @@ Shiny.addCustomMessageHandler('lose', function(message) {
 
 ")),
 
-  
+
   tags$script(HTML("
       Shiny.addCustomMessageHandler('confetti', function(message) {
         confetti({
@@ -63,7 +63,7 @@ Shiny.addCustomMessageHandler('lose', function(message) {
     }, 1000);
   });
 ")),
-  
+
   tags$style(HTML("
    @keyframes shake {
       0% { transform: translate(10px, 10px) rotate(0deg); }
@@ -121,7 +121,7 @@ Shiny.addCustomMessageHandler('lose', function(message) {
       background-color: white;
       border: none;
     }
-    
+
     .solution-button {
       background: linear-gradient(135deg, #a8e6cf, #56ab2f);
       color: white;
@@ -177,7 +177,7 @@ Shiny.addCustomMessageHandler('lose', function(message) {
       justify-content: center;
       margin-top: 0px;
     }
-    
+
     .gold-button {
       background: linear-gradient(135deg, #fced9f, #d4ae33);
   color: white;
@@ -189,7 +189,7 @@ Shiny.addCustomMessageHandler('lose', function(message) {
   font-family: 'Patrick Hand', fantasy;
   text-align: center;
     }
-    
+
     .gold-case {
     width: 100%;
       height: 100%;
@@ -198,7 +198,7 @@ Shiny.addCustomMessageHandler('lose', function(message) {
       cursor: not-allowed;
       border-radius: 0;
     }
-    
+
     .new-gold-button {
       display: flex;
   flex-direction: column; /* Dispose les éléments verticalement */
@@ -252,14 +252,14 @@ Shiny.addCustomMessageHandler('lose', function(message) {
     }
 
     .abandon {
-      background-color: red;
+      background: linear-gradient(135deg, #ff9999, #cc0000);
       color: white;
       font-size: 30px;
       font-family: 'Patrick Hand', fantasy;
       padding: 5px 20px;
       border-radius: 10px;
       position: absolute; /* Positionnement indépendant */
-  top: 80%; /* Ajuste la hauteur, peut être 50%, 70%, etc. selon tes besoins */
+  top: 70%; /* Ajuste la hauteur, peut être 50%, 70%, etc. selon tes besoins */
   left: 80%; /* Centre horizontalement */
     }
 
@@ -299,7 +299,7 @@ server <- function(input, output, session) {
   debut_temps <- reactiveVal(NULL)
   depart_chrono <- reactiveVal(FALSE)
   timer_actif <- reactiveVal(TRUE)
-  
+
   output$accueil_page <- renderUI({
     tagList(
       div(style = "text-align: center; margin-top: 150px;",
@@ -309,10 +309,10 @@ server <- function(input, output, session) {
       )
     )
   })
-  
+
   observeEvent(input$start_game, {
     output$accueil_page <- renderUI({ NULL })
-    
+
     output$niveau_page <- renderUI({
       div(class="centre",h2("Choisissez un niveau de difficulté :",class="titre"),
           div(
@@ -324,19 +324,19 @@ server <- function(input, output, session) {
           actionButton("grille_bonus", "Grille Bonus", class = "gold-button"),
           actionButton("back_to_home", "Retour à l'accueil", class = "back-button")
       )})})
-  
+
   init_game <- function(niv) {
     g <- grille(niv)
     grille_val(g)
     user_grille$grid <- g
   }
-  
-  
+
+
   observeEvent(input$niveau_facile, {
-    debut_temps(Sys.time()) 
+    debut_temps(Sys.time())
     depart_chrono(TRUE)
     output$niveau_page <- renderUI({ NULL })
-    
+
     output$timer <- renderText({
       req(debut_temps(), depart_chrono())  # Assurer que ces valeurs existent
       if (timer_actif()) {  # Si le timer est actif, mettre à bonus
@@ -347,17 +347,17 @@ server <- function(input, output, session) {
         return("00:00:00")  # Si le timer est inactif, afficher 00:00:00
       }
     })
-    
+
     niveau_select("facile")
     init_game("facile")
     show_game_page("Facile")
   })
-  
+
   observeEvent(input$niveau_moyen, {
     debut_temps(Sys.time())  # Initialiser le temps de début
     depart_chrono(TRUE)
     output$niveau_page <- renderUI({ NULL })
-    
+
     output$timer <- renderText({
       req(debut_temps(), depart_chrono())  # Assurer que ces valeurs existent
       if (timer_actif()) {  # Si le timer est actif, mettre à bonus
@@ -368,17 +368,17 @@ server <- function(input, output, session) {
         return("00:00:00")  # Si le timer est inactif, afficher 00:00:00
       }
     })
-    
+
     niveau_select("moyen")
     init_game("moyen")
     show_game_page("Moyen")
   })
-  
+
   observeEvent(input$niveau_difficile, {
     debut_temps(Sys.time())  # Initialiser le temps de début
     depart_chrono(TRUE)
     output$niveau_page <- renderUI({ NULL })
-    
+
     output$timer <- renderText({
       req(debut_temps(), depart_chrono())  # Assurer que ces valeurs existent
       if (timer_actif()) {  # Si le timer est actif, mettre à bonus
@@ -389,18 +389,18 @@ server <- function(input, output, session) {
         return("00:00:00")  # Si le timer est inactif, afficher 00:00:00
       }
     })
-    
+
     niveau_select("difficile")
     init_game("difficile")
     show_game_page("Difficile")
   })
-  
+
   observeEvent(input$grille_bonus, {
-    
+
     debut_temps(Sys.time())  # Initialiser le temps de début
     depart_chrono(TRUE)
     output$niveau_page <- renderUI({ NULL })
-    
+
     output$timer <- renderText({
       req(debut_temps(), depart_chrono())  # Assurer que ces valeurs existent
       if (timer_actif()) {  # Si le timer est actif, mettre à bonus
@@ -411,7 +411,7 @@ server <- function(input, output, session) {
         return("00:00:00")  # Si le timer est inactif, afficher 00:00:00
       }
     })
-    
+
     niveau_select("bonus")
     init_game("bonus")
     output$niveau_page <- renderUI({
@@ -428,7 +428,7 @@ server <- function(input, output, session) {
       )
     })
   })
-  
+
   show_game_page <- function(title) {
     output$niveau_page <- renderUI({
       tagList(
@@ -445,7 +445,7 @@ server <- function(input, output, session) {
       )
     })
   }
-  
+
   observeEvent(input$verifier, {
     # Vérifiez si la grille est bien définie avant de l'utiliser
     if (!is.null(grille_val()) && !is.null(user_grille$grid) && verifier(user_grille$grid)) {
@@ -457,8 +457,8 @@ server <- function(input, output, session) {
       session$sendCustomMessage("shake", list())
     }
   })
-  
-  
+
+
   # Afficher la grille selon le niveau choisi
   output$grille_affiche <- renderUI({
     req(user_grille$grid)
@@ -474,9 +474,9 @@ server <- function(input, output, session) {
                         if (is.na(grille_val()[i, j])) {
                           label_text <- ifelse(is.na(val), " ", as.character(val))
                           tags$td(actionButton(btn_id, label = label_text, class = "case-button"))
-                        } 
+                        }
                         else {
-                          case_class <- if (niveau == "bonus") 
+                          case_class <- if (niveau == "bonus")
                             {"gold-case"}
                           else {
                             "case" }
@@ -488,8 +488,8 @@ server <- function(input, output, session) {
                 )
     ))
   })
-  
-  
+
+
   # Dynamique : observer tous les boutons cliquables (cases vides)
   observe({
     for (i in 1:8) {
@@ -516,7 +516,7 @@ server <- function(input, output, session) {
       }
     }
   })
-  
+
   observeEvent(input$nouvelle_partie, {
     debut_temps(Sys.time())  # Initialiser le temps de début
     depart_chrono(TRUE)
@@ -527,13 +527,13 @@ server <- function(input, output, session) {
     grille_val(g)
     user_grille$grid <- g
   })
-  
+
   observeEvent(input$back_to_home, {
     grille_val(NULL)
     niveau_select(NULL)
     output$niveau_page <- renderUI({ NULL })
     output$jeu_page <- renderUI({ NULL })
-    
+
     output$accueil_page <- renderUI({
       tagList(
         div(style = "text-align: center; margin-top: 50px;",
@@ -545,7 +545,7 @@ server <- function(input, output, session) {
     })
     output$timer <- renderText({NULL})
   })
-  
+
   observeEvent(input$abandon, {
     grille_val(NULL)
     niveau_select(NULL)
@@ -561,7 +561,7 @@ server <- function(input, output, session) {
           actionButton("grille_bonus", "Grille Bonus", class = "gold-button"),
           actionButton("back_to_home", "Retour à l'accueil", class = "back-button")
       )})})
-  
+
   observeEvent(input$recommencer, {
     debut_temps(Sys.time())  # Initialiser le temps de début
     depart_chrono(TRUE)
@@ -576,10 +576,10 @@ server <- function(input, output, session) {
         }
       }
     }
-    
+
     user_grille$grid <- new_grid  # Mise à bonus de la grille affichée
   })
-  
+
 }
 
 shinyApp(ui, server)
