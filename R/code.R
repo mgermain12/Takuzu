@@ -34,6 +34,7 @@ Shiny.addCustomMessageHandler('lose', function(message) {
 });
 
 ")),
+
   
   tags$script(HTML("
       Shiny.addCustomMessageHandler('confetti', function(message) {
@@ -119,6 +120,20 @@ Shiny.addCustomMessageHandler('lose', function(message) {
       font-size: 25px;
       background-color: white;
       border: none;
+    }
+    
+    .solution-button {
+      background: linear-gradient(135deg, #a8e6cf, #56ab2f);
+      color: white;
+      font-size: 30px;
+      font-family: 'Patrick Hand', fantasy;
+      box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1); /* Ombre légère */
+      padding: 10px 30px;
+      border-radius: 10px;
+      margin: 80px;
+      position: absolute;
+      top: 40%;
+  left: 75%;
     }
 
     .new-button {
@@ -407,6 +422,7 @@ server <- function(input, output, session) {
         div(class = "centre1", uiOutput("grille_affiche")),
         actionButton("back_to_home", "Retour à l'accueil", class = "back-button"),
         actionButton("recommencer", "Recommencer", class = "new-gold-button"),
+        actionButton("solution", "Solution", class="solution-button"),
         actionButton("verifier", "Vérifier", class = "new-gold-button"),
         actionButton("abandon", "Abandonner", class = "abandon")
       )
@@ -421,6 +437,7 @@ server <- function(input, output, session) {
         h2(title, class = "centre1"),
         div(class = "centre1", uiOutput("grille_affiche")),
         actionButton("verifier", "Vérifier", class = "new-button"),
+        actionButton("solution", "Solution", class="solution-button"),
         actionButton("recommencer", "Recommencer", class = "new-button"),
         actionButton("nouvelle_partie", "Nouvelle partie", class = "new-button"),
         actionButton("back_to_home", "Retour à l'accueil", class = "back-button"),
