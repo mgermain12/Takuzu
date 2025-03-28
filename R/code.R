@@ -179,9 +179,27 @@ Shiny.addCustomMessageHandler('lose', function(message) {
     width: 100%;
       height: 100%;
       font-size: 25px;
-      background-color: #d4ae33;
+      background-color: #e0c260;
       cursor: not-allowed;
       border-radius: 0;
+    }
+    
+    .new-gold-button {
+      display: flex;
+  flex-direction: column; /* Dispose les éléments verticalement */
+  align-items: center; /* Centre les éléments horizontalement */
+  gap: 10px; /* Espace entre les boutons */
+      background: linear-gradient(135deg, #fced9f, #d4ae33);
+      color: white;
+      font-size: 30px;
+      font-family: 'Patrick Hand', fantasy;
+      box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1); /* Ombre légère */
+      padding: 10px 30px;
+      border-radius: 10px;
+      margin: 80px;
+      position: relative;
+      top: -500px;
+      left: 70px;
     }
 
 .centre {
@@ -388,8 +406,8 @@ server <- function(input, output, session) {
         h2("Grille Bonus", class = "centre1"),
         div(class = "centre1", uiOutput("grille_affiche")),
         actionButton("back_to_home", "Retour à l'accueil", class = "back-button"),
-        actionButton("recommencer", "Recommencer", class = "new-button"),
-        actionButton("verifier", "Vérifier", class = "new-button"),
+        actionButton("recommencer", "Recommencer", class = "new-gold-button"),
+        actionButton("verifier", "Vérifier", class = "new-gold-button"),
         actionButton("abandon", "Abandonner", class = "abandon")
       )
     })
@@ -428,6 +446,7 @@ server <- function(input, output, session) {
   output$grille_affiche <- renderUI({
     req(user_grille$grid)
     grid <- user_grille$grid
+    niveau <- niveau_select()
     tagList(div(class="centre",
                 tags$table(
                   lapply(1:nrow(grid), function(i) {
@@ -440,7 +459,11 @@ server <- function(input, output, session) {
                           tags$td(actionButton(btn_id, label = label_text, class = "case-button"))
                         } 
                         else {
-                            tags$td(actionButton(btn_id, label = as.character(val), class = "case"))
+                          case_class <- if (niveau == "bonus") 
+                            {"gold-case"}
+                          else {
+                            "case" }
+                          tags$td(actionButton(btn_id, label = as.character(val), class = case_class))
                         }
                       })
                     )
