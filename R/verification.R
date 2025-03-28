@@ -4,6 +4,10 @@
 #' @export
 
 verifier <- function(grille) {
+  # Vérifier qu'il n'y a aucune case vide (NA)
+  if (any(is.na(grille))) {
+    return(FALSE)
+  }
 
   # Vérifier les lignes et les colonnes
   for (i in 1:8) {
