@@ -74,9 +74,11 @@ grille <- function(n) {
     return(grille(n))  # Appel récursif sur grille complète
   }
 
+  grille_complete <- solution
   # Suppression des cases selon le niveau
   indices <- sample(1:(taille^2), cases_supp)
   solution[indices] <- NA
 
-  return(solution)
+  return(list(solution = solution, grille_complete = grille_complete))
 }
+ grille_test = grille("Facile")

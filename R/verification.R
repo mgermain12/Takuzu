@@ -3,16 +3,16 @@
 #' @return TRUE si la grille est valide, FALSE sinon.
 #' @export
 
-verifier <- function(grille) {
+verifier <- function(g) {
   # Vérifier qu'il n'y a aucune case vide (NA)
-  if (any(is.na(grille))) {
+  if (any(is.na(g))) {
     return(FALSE)
   }
 
   # Vérifier les lignes et les colonnes
   for (i in 1:8) {
-    ligne <- grille[i, ]
-    colonne <- grille[, i]
+    ligne <- g[i, ]
+    colonne <- g[, i]
 
     # Vérifier qu'il n'y a pas plus de 4 zéros ou de 4 uns dans une ligne ou colonne
     if (sum(ligne == 0, na.rm = TRUE) > 4 || sum(ligne == 1, na.rm = TRUE) > 4) {
@@ -32,14 +32,12 @@ verifier <- function(grille) {
   }
 
   # Vérifier que toutes les lignes et colonnes sont uniques
-  lignes <- apply(grille, 1, paste, collapse = "")
-  colonnes <- apply(grille, 2, paste, collapse = "")
+  lignes <- apply(g, 1, paste, collapse = "")
+  colonnes <- apply(g, 2, paste, collapse = "")
 
-  if (length(unique(lignes)) != nrow(grille) || length(unique(colonnes)) != ncol(grille)) {
+  if (length(unique(lignes)) != nrow(g) || length(unique(colonnes)) != ncol(g)) {
     return(FALSE)
   }
 
   return(TRUE)
 }
-
-verifier(grille("facile"))

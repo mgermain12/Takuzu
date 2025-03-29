@@ -40,7 +40,7 @@ Shiny.addCustomMessageHandler('lose', function(message) {
       Shiny.addCustomMessageHandler('confetti', function(message) {
         confetti({
         spread: 5000,
-          particleCount: 10000,  // Augmentation du nombre de confettis pour un effet plus intense
+          particleCount: 7000,  // Augmentation du nombre de confettis pour un effet plus intense
       origin: {  x: 0.5, y: 1.45  },   // Position de départ (milieu de l'écran)
       gravity: 0.5,         // Gravité plus forte pour faire tomber les confettis rapidement
       startVelocity: 100,    // Vitesse plus élevée pour que l'explosion soit encore plus massive
@@ -292,10 +292,10 @@ Shiny.addCustomMessageHandler('lose', function(message) {
 
 
 server <- function(input, output, session) {
-  grille_du_bonus <- reactiveVal(NULL)
   niveau_select <- reactiveVal(NULL)
   grille_val <- reactiveVal(NULL)
   user_grille <- reactiveValues(grid = NULL)
+  complete_grille <- reactiveValues(grid = NULL)
   debut_temps <- reactiveVal(NULL)
   depart_chrono <- reactiveVal(FALSE)
   timer_actif <- reactiveVal(TRUE)
@@ -327,8 +327,9 @@ server <- function(input, output, session) {
 
   init_game <- function(niv) {
     g <- grille(niv)
-    grille_val(g)
-    user_grille$grid <- g
+    grille_val(g$solution)
+    user_grille$grid <- g$solution
+    complete_grille$grid <- g$grille_complete
   }
 
 
@@ -348,8 +349,8 @@ server <- function(input, output, session) {
       }
     })
 
-    niveau_select("facile")
-    init_game("facile")
+    niveau_select("Facile")
+    init_game("Facile")
     show_game_page("Facile")
   })
 
@@ -369,8 +370,8 @@ server <- function(input, output, session) {
       }
     })
 
-    niveau_select("moyen")
-    init_game("moyen")
+    niveau_select("Moyen")
+    init_game("Moyen")
     show_game_page("Moyen")
   })
 
@@ -390,8 +391,8 @@ server <- function(input, output, session) {
       }
     })
 
-    niveau_select("difficile")
-    init_game("difficile")
+    niveau_select("Difficile")
+    init_game("Difficile")
     show_game_page("Difficile")
   })
 
@@ -412,8 +413,8 @@ server <- function(input, output, session) {
       }
     })
 
-    niveau_select("bonus")
-    init_game("bonus")
+    niveau_select("Bonus")
+    init_game("Bonus")
     output$niveau_page <- renderUI({
       tagList(
         div(id = "timer_container", style = "font-size: 30px; font-family: 'Patrick Hand', fantasy; text-align: center; margin-top: 20px;",
@@ -446,6 +447,16 @@ server <- function(input, output, session) {
     })
   }
 
+  observeEvent(input$solution, {
+    debut_temps(Sys.time())
+    depart_chrono(TRUE)
+    timer_actif(FALSE)
+    new_grid <- complete_grille$grid
+    grille_val(g$grille_complete)
+    user_grille$grid <- new_grid
+  })
+
+
   observeEvent(input$verifier, {
     # Vérifiez si la grille est bien définie avant de l'utiliser
     if (!is.null(grille_val()) && !is.null(user_grille$grid) && verifier(user_grille$grid)) {
@@ -461,7 +472,7 @@ server <- function(input, output, session) {
 
   # Afficher la grille selon le niveau choisi
   output$grille_affiche <- renderUI({
-    req(user_grille$grid)
+   req(user_grille$grid)
     grid <- user_grille$grid
     niveau <- niveau_select()
     tagList(div(class="centre",
@@ -518,14 +529,13 @@ server <- function(input, output, session) {
   })
 
   observeEvent(input$nouvelle_partie, {
+    niveau = niveau_select()
     debut_temps(Sys.time())  # Initialiser le temps de début
     depart_chrono(TRUE)
     timer_actif(TRUE)
     req(niveau_select())
-    init_game(niveau_select())
-    g <- grille(niveau_select())
-    grille_val(g)
-    user_grille$grid <- g
+    init_game(niveau)
+    show_game_page(niveau)
   })
 
   observeEvent(input$back_to_home, {
