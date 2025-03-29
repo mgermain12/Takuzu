@@ -451,9 +451,7 @@ server <- function(input, output, session) {
     debut_temps(Sys.time())
     depart_chrono(TRUE)
     timer_actif(FALSE)
-    new_grid <- complete_grille$grid
-    grille_val(g$grille_complete)
-    user_grille$grid <- new_grid
+    user_grille$grid <- complete_grille$grid
   })
 
 
@@ -487,7 +485,7 @@ server <- function(input, output, session) {
                           tags$td(actionButton(btn_id, label = label_text, class = "case-button"))
                         }
                         else {
-                          case_class <- if (niveau == "bonus")
+                          case_class <- if (niveau == "Bonus")
                             {"gold-case"}
                           else {
                             "case" }

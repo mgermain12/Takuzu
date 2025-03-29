@@ -40,7 +40,7 @@ cd Takuzu
 
 Auteurs : Marine GERMAIN, Coralie ROMANI DE VINCI
 
-Contacts : [marine.germain\@etu.umontpellier.fr](mailto:marine.germain@etu.umontpellier.fr){.email}, [coralie.romani-de-vinci\@etu.umontpellier.fr](mailto:coralie.romani-de-vinci@etu.umontpellier.fr){.email}
+Contacts : [marine.germain\@etu.umontpellier.fr](mailto:marine.germain@etu.umontpellier.fr), [coralie.romani-de-vinci\@etu.umontpellier.fr](mailto:coralie.romani-de-vinci@etu.umontpellier.fr)
 
 ------------------------------------------------------------------------
 
