@@ -83,6 +83,34 @@ Shiny.addCustomMessageHandler('lose', function(message) {
       animation: shake 1s;
       animation-iteration-count: 3;
     }
+
+  .homepage {
+    background-image: url('fond_takuzu.png');
+    background-size: cover;
+    background-position: left -500px; /* Met l’image plus à gauche et en haut */
+    background-attachment: fixed;
+
+    position: absolute; /* Prend toute la page */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+  .background-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('fond_takuzu.png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    opacity: 0.4; /* Ajuste ici la transparence de l'image */
+    z-index: -1;
+  }
+
   .parchment-button {
   background: linear-gradient(135deg, #add8e6, #4682b4);
   color: white;
@@ -301,8 +329,12 @@ server <- function(input, output, session) {
   timer_actif <- reactiveVal(TRUE)
 
   output$accueil_page <- renderUI({
+    runjs("
+        document.body.style.background = 'none';
+    ")
     tagList(
-      div(style = "text-align: center; margin-top: 150px;",
+      div(class = "background-container"),
+      div(style = "text-align: center; margin-top: 50px;",
           h1("Le Fou Takuzu !", class ="title-text"),
           tags$div(
             class = "center-button",actionButton("start_game", "Commencer le jeu", class = "parchment-button"))
@@ -311,10 +343,13 @@ server <- function(input, output, session) {
   })
 
   observeEvent(input$start_game, {
+    runjs("
+        document.body.style.background = 'white';
+    ")
     output$accueil_page <- renderUI({ NULL })
 
     output$niveau_page <- renderUI({
-      div(class="centre",h2("Choisissez un niveau de difficulté :",class="titre"),
+    div(class="centre",h2("Choisissez un niveau de difficulté :",class="titre"),
           div(
             class = "button-row",
             actionButton("niveau_facile", "Facile", class = "parchment-button"),
@@ -537,6 +572,9 @@ server <- function(input, output, session) {
   })
 
   observeEvent(input$back_to_home, {
+    runjs("
+        document.body.style.background = 'none';
+    ")
     grille_val(NULL)
     niveau_select(NULL)
     output$niveau_page <- renderUI({ NULL })
@@ -544,6 +582,7 @@ server <- function(input, output, session) {
 
     output$accueil_page <- renderUI({
       tagList(
+        div(class = "background-container"),
         div(style = "text-align: center; margin-top: 50px;",
             h1("Le Fou Takuzu !", class ="title-text"),
             tags$div(
