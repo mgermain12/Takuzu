@@ -84,6 +84,29 @@ Shiny.addCustomMessageHandler('lose', function(message) {
       animation-iteration-count: 3;
     }
 
+.responsive-accueil {
+                width: 100vw;
+                height: 100vh;
+                overflow: hidden;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: flex-start;
+                text-align: center;
+            }
+            .responsive-accueil h1, .responsive-accueil h2, .responsive-accueil p {
+                font-size: calc(10vw + 1vh); /* Ajuste dynamiquement la taille du texte */
+            }
+
+.responsive-jeu {
+                width: 100vw;
+                height: 100vh;
+                overflow: hidden;
+}
+
+
+
+
   .homepage {
     background-image: url('fond_takuzu.png');
     background-size: cover;
@@ -95,7 +118,7 @@ Shiny.addCustomMessageHandler('lose', function(message) {
     left: 0;
     width: 100%;
     height: 100%;
-}
+  }
 
   .background-container {
     position: fixed;
@@ -118,7 +141,7 @@ Shiny.addCustomMessageHandler('lose', function(message) {
   border-radius: 10px;
   padding: 20px 30px;
   border: 1px solid #b09763;
-  box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1); /* Ombre légère */
+  -shadow: 3px 3px 5px rgba(0, 0, 0, 0.1); /* Ombre légère */
   font-family: 'Patrick Hand', fantasy;
   text-align: center;
 }
@@ -333,12 +356,13 @@ server <- function(input, output, session) {
         document.body.style.background = 'none';
     ")
     tagList(
+      div(class="responsive-accueil",
       div(class = "background-container"),
       div(style = "text-align: center; margin-top: 50px;",
           h1("Le Fou Takuzu !", class ="title-text"),
           tags$div(
             class = "center-button",actionButton("start_game", "Commencer le jeu", class = "parchment-button"))
-      )
+      ))
     )
   })
 
@@ -451,7 +475,7 @@ server <- function(input, output, session) {
     niveau_select("Bonus")
     init_game("Bonus")
     output$niveau_page <- renderUI({
-      tagList(
+      tagList(div(class ="responsive-jeu",
         div(id = "timer_container", style = "font-size: 30px; font-family: 'Patrick Hand', fantasy; text-align: center; margin-top: 20px;",
             textOutput("timer")),
         h2("Grille Bonus", class = "centre1"),
@@ -461,7 +485,7 @@ server <- function(input, output, session) {
         actionButton("solution", "Solution", class="solution-button"),
         actionButton("verifier", "Vérifier", class = "new-gold-button"),
         actionButton("abandon", "Abandonner", class = "abandon")
-      )
+      ))
     })
   })
 
@@ -508,7 +532,8 @@ server <- function(input, output, session) {
    req(user_grille$grid)
     grid <- user_grille$grid
     niveau <- niveau_select()
-    tagList(div(class="centre",
+    tagList(
+      div(class="centre",
                 tags$table(
                   lapply(1:nrow(grid), function(i) {
                     tags$tr(
@@ -582,12 +607,13 @@ server <- function(input, output, session) {
 
     output$accueil_page <- renderUI({
       tagList(
+        div(class="responsive-accueil",
         div(class = "background-container"),
         div(style = "text-align: center; margin-top: 50px;",
             h1("Le Fou Takuzu !", class ="title-text"),
             tags$div(
               class = "center-button",actionButton("start_game", "Commencer le jeu", class = "parchment-button"))
-        )
+        ))
       )
     })
     output$timer <- renderText({NULL})
