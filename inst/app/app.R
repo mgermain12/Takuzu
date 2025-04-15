@@ -394,10 +394,10 @@ server <- function(input, output, session) {
     output$accueil_page <- renderUI({ NULL })
 
     output$niveau_page <- renderUI({
-      div(class="centre", div(style = "margin-bottom: 10px;",h2("Qu'est ce que le Takuzu ?",class="titre")),
+      div(class="centre", div(style = "margin-bottom: 5px;",h2("Qu'est ce que le Takuzu ?",class="titre")),
           h1("Il s'agit d'un jeu de logique japonais qui se joue sur une grille remplie de 0 et de 1. Il est très proche du Sudoku
              mais repose sur des règles plus simples et une réflexion binaire. Il porte également le nom Binario."),
-          div(style = "margin-bottom: -15px;",h2("Comment jouer au Takuzu ?",class="titre")),
+          div(style = "margin-bottom: -20px;",h2("Comment jouer au Takuzu ?",class="titre")),
           div(style = "margin-top: 20px;",
           h1("1. Chaque ligne et chaque colonne doivent contenir autant de 0 que de 1."),
           h1("2. Il ne faut pas avoir plus de deux 0 ou de 1 consécutifs."),

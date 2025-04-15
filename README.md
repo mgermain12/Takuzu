@@ -15,16 +15,17 @@ Deux lignes ou deux colonnes identiques sont interdites.
 
 1️⃣ **Prérequis** :
 
-Assurez-vous d’avoir R et effectuez la commande suivante :
+Assurez-vous d’avoir R et effectuez les commandes suivantes :
 
 ``` r
 install.packages("devtools")
-devtools::install_github("mgermain12/Takuzu")
+library(devtools)
 ```
 
-2️⃣ **Charger le package** :
+2️⃣ **Installer et charger le package** :
 
 ``` r
+devtools::install_github("mgermain12/Takuzu")
 library(Takuzu)
 ```
 
