@@ -18,21 +18,21 @@ Deux lignes ou deux colonnes identiques sont interdites.
 Assurez-vous d’avoir R et effectuez la commande suivante :
 
 ``` r
-install.packages(c("shiny", "bslib", "shinyjs"))
+install.packages("devtools")
+devtools::install_github("mgermain12/Takuzu")
 ```
 
-2️⃣**Cloner le projet** :
+**Charger le package** :
 
-``` sh
-git clone https://github.com/mgermain12/Takuzu.git
-cd Takuzu
+``` r
+library(Takuzu)
 ```
 
 3️⃣ **Lancer l’application**:
 
--   Ouvrir le fichier *jouer.R* du dossier *R*.
--   Vérifier les chemins des fichiers utilisés.
--   Exécuter le code.
+``` r
+jouer()
+```
 
 ------------------------------------------------------------------------
 

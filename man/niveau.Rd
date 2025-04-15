@@ -7,7 +7,7 @@
 niveau(x)
 }
 \arguments{
-\item{niveau}{Un caractère indiquant le niveau de difficulté. Doit être l'un des suivants :
+\item{x}{Un caractère indiquant le niveau de difficulté. Doit être l'un des suivants :
 \itemize{
 \item \code{"facile"} (30 cases supprimées)
 \item \code{"moyen"} (35 cases supprimées)

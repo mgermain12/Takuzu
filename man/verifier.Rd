@@ -4,10 +4,10 @@
 \alias{verifier}
 \title{Vérifie que la grille générée respecte les règles du Takuzu.}
 \usage{
-verifier(grille)
+verifier(g)
 }
 \arguments{
-\item{grille}{Une matrice 8x8 représentant la grille Takuzu.}
+\item{g}{Une matrice 8x8 représentant la grille Takuzu.}
 }
 \value{
 TRUE si la grille est valide, FALSE sinon.
