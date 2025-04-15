@@ -81,4 +81,3 @@ grille <- function(n) {
 
   return(list(solution = solution, grille_complete = grille_complete))
 }
- grille_test = grille("Facile")

@@ -11,7 +11,7 @@
 niveau <- function(x) {
 
   niveaux <- list("Facile" = 20, "Moyen" = 35, "Difficile" = 40, "Bonus" = 45)
-  nb_cases <- niveaux[[x]]
+  nb_cases <- niveaux[[tolower(x)]]
 
   return(nb_cases)
 }
