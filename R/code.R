@@ -337,6 +337,7 @@ Shiny.addCustomMessageHandler('lose', function(message) {
     }
   ")),
   uiOutput("accueil_page"),
+  uiOutput("regles_page"),
   uiOutput("niveau_page"),
   uiOutput("jeu_page")
 )
@@ -361,7 +362,9 @@ server <- function(input, output, session) {
       div(style = "text-align: center; margin-top: 50px;",
           h1("Le Fou Takuzu !", class ="title-text"),
           tags$div(
-            class = "center-button",actionButton("start_game", "Commencer le jeu", class = "parchment-button"))
+            class = "center-button",actionButton("start_game", "Commencer le jeu", class = "parchment-button"),
+            tags$br(), tags$br(),
+            actionButton("regles", "Règles du jeu", class = "parchment-button"))
       ))
     )
   })
@@ -384,13 +387,31 @@ server <- function(input, output, session) {
           actionButton("back_to_home", "Retour à l'accueil", class = "back-button")
       )})})
 
+  observeEvent(input$regles, {
+    runjs("
+        document.body.style.background = 'white';
+    ")
+    output$accueil_page <- renderUI({ NULL })
+
+    output$niveau_page <- renderUI({
+      div(class="centre", div(style = "margin-bottom: 10px;",h2("Qu'est ce que le Takuzu ?",class="titre")),
+          h1("Il s'agit d'un jeu de logique japonais qui se joue sur une grille remplie de 0 et de 1. Il est très proche du Sudoku
+             mais repose sur des règles plus simples et une réflexion binaire. Il porte également le nom Binario."),
+          div(style = "margin-bottom: -15px;",h2("Comment jouer au Takuzu ?",class="titre")),
+          div(style = "margin-top: 20px;",
+          h1("1. Chaque ligne et chaque colonne doivent contenir autant de 0 que de 1."),
+          h1("2. Il ne faut pas avoir plus de deux 0 ou de 1 consécutifs."),
+          h1("3. Aucune ligne ou colonne ne doit être identique à une autre.")),
+          h2("Bonne partie !",class="titre"),
+      actionButton("back_to_home", "Retour à l'accueil", class = "back-button"))
+      })})
+
   init_game <- function(niv) {
     g <- grille(niv)
     grille_val(g$solution)
     user_grille$grid <- g$solution
     complete_grille$grid <- g$grille_complete
   }
-
 
   observeEvent(input$niveau_facile, {
     debut_temps(Sys.time())
@@ -612,7 +633,9 @@ server <- function(input, output, session) {
         div(style = "text-align: center; margin-top: 50px;",
             h1("Le Fou Takuzu !", class ="title-text"),
             tags$div(
-              class = "center-button",actionButton("start_game", "Commencer le jeu", class = "parchment-button"))
+              class = "center-button",actionButton("start_game", "Commencer le jeu", class = "parchment-button"),
+              tags$br(), tags$br(),
+              actionButton("regles", "Règles du jeu", class = "parchment-button"))
         ))
       )
     })
