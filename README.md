@@ -22,7 +22,7 @@ install.packages("devtools")
 devtools::install_github("mgermain12/Takuzu")
 ```
 
-**Charger le package** :
+2️⃣ **Charger le package** :
 
 ``` r
 library(Takuzu)
