@@ -4,7 +4,7 @@ Version: 0.0.0.9000
 Authors@R: 
         c(
       person("Coralie", "ROMANI DE VINCI", email = "coralie.romani-de-vinci@etu.umontpellier.fr", role = c("aut", "cre")),
-      person("Marine", "GERMAIN", email = "marine.germain@etu.umontpellier.fr", role = c("aut", "cre"))
+      person("Marine", "GERMAIN", email = "marine.germain@etu.umontpellier.fr", role = c("aut"))
     )
 Description: Ce package génère des grilles de Takuzu valides et permet de les vérifier.
 License: MIT
