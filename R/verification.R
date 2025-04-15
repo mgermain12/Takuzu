@@ -1,5 +1,5 @@
 #' Vérifie que la grille générée respecte les règles du Takuzu.
-#' @param grille Une matrice 8x8 représentant la grille Takuzu.
+#' @param g Une matrice 8x8 représentant la grille Takuzu.
 #' @return TRUE si la grille est valide, FALSE sinon.
 #' @export
 
