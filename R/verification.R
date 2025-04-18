@@ -4,17 +4,17 @@
 #' @export
 
 verifier <- function(g) {
-  # Vérifier qu'il n'y a aucune case vide (NA)
+
+  # Vérifie que toutes les cases sont remplies
   if (any(is.na(g))) {
     return(FALSE)
   }
 
-  # Vérifier les lignes et les colonnes
   for (i in 1:8) {
     ligne <- g[i, ]
     colonne <- g[, i]
 
-    # Vérifier qu'il n'y a pas plus de 4 zéros ou de 4 uns dans une ligne ou colonne
+    # Vérifie qu'il n'y a pas plus de 4 zéros ou de 4 uns dans une ligne ou une colonne
     if (sum(ligne == 0, na.rm = TRUE) > 4 || sum(ligne == 1, na.rm = TRUE) > 4) {
       return(FALSE)
     }
@@ -22,7 +22,7 @@ verifier <- function(g) {
       return(FALSE)
     }
 
-    # Vérifier qu'il n'y a pas plus de 2 chiffres identiques consécutifs dans une ligne ou colonne
+    # Vérifie qu'il n'y a pas plus de 2 chiffres identiques consécutifs dans une ligne ou une colonne
     if (any(rle(ligne[!is.na(ligne)])$lengths > 2)) {
       return(FALSE)
     }
@@ -31,7 +31,7 @@ verifier <- function(g) {
     }
   }
 
-  # Vérifier que toutes les lignes et colonnes sont uniques
+  # Vérifie que toutes les lignes et colonnes sont uniques
   lignes <- apply(g, 1, paste, collapse = "")
   colonnes <- apply(g, 2, paste, collapse = "")
 

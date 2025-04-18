@@ -7,7 +7,7 @@
 grille(n)
 }
 \arguments{
-\item{n}{Niveau de difficulté entre 'facile', 'moyen', 'difficile', 'jour'.
+\item{n}{Niveau de difficulté entre 'facile', 'moyen', 'difficile', 'bonus'.
 Le nombre de cases à supprimer dépend du niveau choisi.}
 }
 \value{
